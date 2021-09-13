@@ -13,12 +13,12 @@ class TestFilespot(unittest.TestCase):
     def setUp(self):
         self.session = Session(LOGIN, PASSWORD)
 
-    def test_upload(self):
-        with patch("builtins.open", mock_open(read_data="data")) as mock_file:
-            assert open("path/to/open").read() == "data"
-            mock_file.assert_called_with("path/to/open")
-        filespot = self.session.filespot()
-        filespot.upload(LOCAL_PATH, PC_PATH)
+    # def test_upload(self):
+    #     with patch("builtins.open", mock_open(read_data="data")) as mock_file:
+    #         assert open("path/to/open").read() == "data"
+    #         mock_file.assert_called_with("path/to/open")
+    #     filespot = self.session.filespot()
+    #     filespot.upload(LOCAL_PATH, PC_PATH)
 
 
 unittest.main()
