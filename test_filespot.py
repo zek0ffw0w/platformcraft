@@ -43,7 +43,6 @@ class TestFilespot(unittest.TestCase):
 
             filespot = self.session.filespot()
             response = filespot.file_info(PC_PATH)
-            # print(response.text)
 
         self.assertIn(fake_json, response.text)
         self.assertEqual(response.status_code, 200)
