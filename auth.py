@@ -20,8 +20,8 @@ class Auth:
         try:
             resp = requests.post(url, headers=headers, data=body)
             if resp.ok:
-                print(resp.status_code)
-                print(resp.text)
+                logger.debug(resp.status_code)
+                logger.debug(resp.text)
                 self.get_data(resp)
                 return resp
         except requests.exceptions.HTTPError as err:
@@ -46,8 +46,8 @@ class Auth:
         try:
             resp = requests.post(url, headers=headers, data=json.dumps(body))
             if resp.ok:
-                print(resp.status_code)
-                print(resp.text)
+                logger.debug(resp.status_code)
+                logger.debug(resp.text)
                 self.get_data(resp)
                 return resp
         except requests.ConnectionError:

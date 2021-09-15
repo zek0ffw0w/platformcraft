@@ -2,6 +2,7 @@ from auth import Auth
 from filespot import Filespot
 from exceptions import *
 import requests
+from logger import *
 
 
 class Session:
@@ -34,16 +35,13 @@ class Session:
             resp.raise_for_status()
         except Exception:
             raise ExceptionUpload(self._get_msg_http_error_resp(resp))
-        finally:
-            print(resp.status_code)
-            print(resp.headers)
-            print(resp.text)
 
     def get(self, url, **params):
         params = self._set_get_header(**params)
         try:
             resp = requests.get(url, **params)
             if resp.ok:
+                logger.debug(resp.text)
                 return resp
         except requests.exceptions.HTTPError as err:
             raise SystemExit(err)
@@ -56,7 +54,7 @@ class Session:
         params = self._set_change_header(**params)
         try:
             resp = requests.put(url, **params)
-            print(resp)
+            logger.debug(resp)
             if resp.ok:
                 return resp
         except requests.exceptions.HTTPError as err:
