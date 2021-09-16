@@ -11,7 +11,7 @@ class TestAuth(unittest.TestCase):
         self.auth = Auth("zek0ffw0w", "123456")
 
     def test_token(self):
-        fake_json = {'user_id': "611a5c4ccd0a6b6c94c5a3da", 'owner_id': "", 'access_token': "12", 'expires_at': "432", 'refresh_token': "432"}
+        fake_json = {'user_id': "", 'owner_id': "", 'access_token': "", 'expires_at': "", 'refresh_token': ""}
 
         with patch('auth.requests.post') as mock_post:
             mock_post.return_value.status_code = 200

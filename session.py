@@ -2,6 +2,7 @@ from auth import Auth
 from filespot import Filespot
 from exceptions import *
 import requests
+from requests.exceptions import HTTPError
 from logger import *
 
 
@@ -29,8 +30,8 @@ class Session:
             resp = requests.post(url, **params)
             if resp.ok:
                 return resp
-        except requests.exceptions.HTTPError as err:
-            raise SystemExit(err)
+        except HTTPError as http_err:
+            logger.debug(f'HTTP error occurred: {http_err}')
         try:
             resp.raise_for_status()
         except Exception:
@@ -43,8 +44,8 @@ class Session:
             if resp.ok:
                 logger.debug(resp.text)
                 return resp
-        except requests.exceptions.HTTPError as err:
-            raise SystemExit(err)
+        except HTTPError as http_err:
+            logger.debug(f'HTTP error occurred: {http_err}')
         try:
             resp.raise_for_status()
         except Exception:
@@ -57,8 +58,8 @@ class Session:
             logger.debug(resp)
             if resp.ok:
                 return resp
-        except requests.exceptions.HTTPError as err:
-            raise SystemExit(err)
+        except HTTPError as http_err:
+            logger.debug(f'HTTP error occurred: {http_err}')
         try:
             resp.raise_for_status()
         except Exception:
@@ -70,8 +71,8 @@ class Session:
             resp = requests.delete(url, **params)
             if resp.ok:
                 return resp
-        except requests.exceptions.HTTPError as err:
-            raise SystemExit(err)
+        except HTTPError as http_err:
+            logger.debug(f'HTTP error occurred: {http_err}')
         try:
             resp.raise_for_status()
         except Exception:

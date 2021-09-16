@@ -15,9 +15,11 @@ class Filespot:
         try:
             files = {'file': open(local_path, 'rb')}
         except Exception as e:
-            raise ExceptionUpload("open file: {}".format(e))
+            raise ExceptionUpload("cant open file: {}".format(e))
         try:
-            self.session.post(url, files=files)
+            req = self.session.post(url, files=files)
+            if req.ok:
+                return req
         except Exception as e:
             raise ExceptionUpload("cant upload file: {}".format(e))
 
@@ -25,7 +27,9 @@ class Filespot:
         logger.debug("removing: %s", pc_path)
         url = FILESPOT_ADDR + self.session.owner_id + '/object/' + pc_path
         try:
-            self.session.delete(url)
+            req = self.session.delete(url)
+            if req.ok:
+                return req
         except Exception as e:
             raise ExceptionRemove("cant delete file: {}".format(e))
 
