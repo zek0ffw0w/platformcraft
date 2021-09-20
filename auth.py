@@ -70,8 +70,13 @@ class Auth:
         except Exception as e:
             raise ExceptionJson("cant get json from response {}".format(e)) from None
         else:
-            data_json = json.dumps(data)
-            data = json.loads(data_json)
+
+            try:
+                data_json = json.dumps(data)
+            except Exception as e:
+                raise ExceptionJson("json.dump error {}".format(e)) from None
+            else:
+                data = json.loads(data_json)
 
         self.owner_id = data["owner_id"]
         self.access_token = data["access_token"]
