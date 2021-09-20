@@ -1,9 +1,10 @@
-from auth import Auth
-from filespot import Filespot
-from exceptions import *
+from .auth import Auth
+from .filespot import Filespot
+from .exceptions import *
+from .logger import *
+
 import requests
 from requests.exceptions import HTTPError
-from logger import *
 
 
 class Session:
@@ -28,10 +29,9 @@ class Session:
         params = self.set_auth_header(**params)
         try:
             resp = requests.post(url, **params)
-            if resp.ok:
-                return resp
         except HTTPError as http_err:
             logger.debug(f'HTTP error occurred: {http_err}')
+
         try:
             resp.raise_for_status()
         except Exception:
@@ -39,13 +39,14 @@ class Session:
 
     def get(self, url, **params):
         params = self._set_get_header(**params)
+
         try:
             resp = requests.get(url, **params)
             if resp.ok:
                 logger.debug(resp.text)
-                return resp
         except HTTPError as http_err:
             logger.debug(f'HTTP error occurred: {http_err}')
+
         try:
             resp.raise_for_status()
         except Exception:
@@ -56,10 +57,9 @@ class Session:
         try:
             resp = requests.put(url, **params)
             logger.debug(resp)
-            if resp.ok:
-                return resp
         except HTTPError as http_err:
             logger.debug(f'HTTP error occurred: {http_err}')
+
         try:
             resp.raise_for_status()
         except Exception:
@@ -67,12 +67,12 @@ class Session:
 
     def delete(self, url, **params):
         params = self.set_auth_header(**params)
+
         try:
             resp = requests.delete(url, **params)
-            if resp.ok:
-                return resp
         except HTTPError as http_err:
             logger.debug(f'HTTP error occurred: {http_err}')
+
         try:
             resp.raise_for_status()
         except Exception:

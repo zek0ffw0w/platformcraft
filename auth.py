@@ -1,9 +1,9 @@
-from logger import logger
+from .logger import logger
+from .exceptions import *
+
+from http import HTTPStatus
 import requests
 import json
-
-
-from exceptions import *
 
 AUTH_ADDR = "https://auth.platformcraft.ru"
 
@@ -13,23 +13,70 @@ class Auth:
         self.token(login, password)
 
     def token(self, login, password):
-        logger.debug("login in to %s", AUTH_ADDR)
+        logger.debug("Auth.token %s", login)
+
         url = AUTH_ADDR + '/token'
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {'login': login, 'password': password}
+
         try:
             resp = requests.post(url, headers=headers, data=body)
+            logger.debug("Auth.token requests.post resp.StatusCode: {}".format(resp.status_code))
+        except Exception as e:
+            raise ExceptionHTTPError("http post: {}".format(e)) from None
+
+        else:
             if resp.ok:
-                logger.debug(resp.status_code)
-                logger.debug(resp.text)
-                self.get_data(resp)
-                return resp
-        except requests.exceptions.HTTPError as err:
-            raise SystemExit(err)
+                self._get_data(resp)
+            if resp.status_code == HTTPStatus.FORBIDDEN:
+                raise ExceptionAuth("login or password incorrect")
+
         try:
             resp.raise_for_status()
         except Exception:
-            raise ExceptionAuth(self._get_msg_http_error_resp(resp))
+            raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
+
+    def refresh(self):
+        logger.debug("refreshing token")
+
+        url = AUTH_ADDR + '/refresh'
+        headers = {'Authorization': 'Bearer ' + self.access_token + ': application/json'}
+        body = {'user_id': self.user_id, 'refresh_token': self.refresh_token}
+
+        try:
+            resp = requests.post(url, headers=headers, data=json.dumps(body))
+            logger.debug("Auth.refresh requests.post resp.StatusCode: {}".format(resp.status_code))
+        except Exception as e:
+            raise ExceptionHTTPError("http post: {}".format(e)) from None
+
+        else:
+            if resp.ok:
+                self._get_data(resp)
+            if resp.status_code == HTTPStatus.FORBIDDEN:
+                raise ExceptionRefresh("user id or access token or refresh token incorrect")
+            if resp.status_code == HTTPStatus.UNAUTHORIZED:
+                raise ExceptionAuth("Unauthorized")
+
+        try:
+            resp.raise_for_status()
+        except Exception:
+            raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
+
+        self._get_data(resp)
+
+    def _get_data(self, resp):
+        try:
+            data = resp.json()
+        except Exception as e:
+            raise ExceptionJson("cant get json from response {}".format(e)) from None
+        else:
+            data_json = json.dumps(data)
+            data = json.loads(data_json)
+
+        self.owner_id = data["owner_id"]
+        self.access_token = data["access_token"]
+        self.user_id = data["user_id"]
+        self.refresh_token = data["refresh_token"]
 
     def _get_msg_http_error_resp(self, resp):
         try:
@@ -37,35 +84,3 @@ class Auth:
             return data["msg"]
         except:
             return resp.content
-
-    def refresh(self):
-        logger.debug("refreshing token to %s", AUTH_ADDR)
-        url = AUTH_ADDR + '/refresh'
-        headers = {'Authorization': 'Bearer ' + self.access_token + ': application/json'}
-        body = {'user_id': self.user_id, 'refresh_token': self.refresh_token}
-        try:
-            resp = requests.post(url, headers=headers, data=json.dumps(body))
-            if resp.ok:
-                logger.debug(resp.status_code)
-                logger.debug(resp.text)
-                self.get_data(resp)
-                return resp
-        except requests.ConnectionError:
-            raise ConnectionError(self._get_msg_http_error_resp(resp))
-        try:
-            resp.raise_for_status()
-        except Exception:
-            raise ExceptionRefresh(self._get_msg_http_error_resp(resp))
-
-        self.get_data(resp)
-
-    def get_data(self, resp):
-
-        data = resp.json()
-        data_json = json.dumps(data)
-        data = json.loads(data_json)
-
-        self.owner_id = data["owner_id"]
-        self.access_token = data["access_token"]
-        self.user_id = data["user_id"]
-        self.refresh_token = data["refresh_token"]

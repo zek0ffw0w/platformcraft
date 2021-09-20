@@ -2,6 +2,18 @@ class ExceptionUpload(Exception):
     pass
 
 
+class ExceptionHTTPError(Exception):
+    pass
+
+
+class ExceptionServerError(Exception):
+    pass
+
+
+class ExceptionJson(Exception):
+    pass
+
+
 class ExceptionAuth(Exception):
     pass
 
