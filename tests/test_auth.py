@@ -1,8 +1,8 @@
 from ..auth import Auth
+from ..exceptions import *
 
 import unittest.mock
 from mock import patch
-
 
 login = "zek0ffw0w"
 password = "123456"
@@ -10,29 +10,29 @@ password = "123456"
 
 class TestAuth(unittest.TestCase):
     def setUp(self):
-        self.auth = Auth("zek0ffw0w", "123456")
+        self.auth = Auth(login, password)
 
     def test_token(self):
-        fake_json = {'user_id': "", 'owner_id': "", 'access_token': "", 'expires_at': "", 'refresh_token': ""}
+        fake_login = "zek0ffw0w"
+        fake_password = "12345"
+        with self.assertRaises(ExceptionAuth) as context:
+            self.auth.token(fake_login, fake_password)
+        self.assertTrue("login or password" in str(context.exception))
 
-        with patch('platformcraft.auth.requests.post') as mock_post:
-            mock_post.return_value.status_code = 200
-            mock_post.return_value.json.return_value = fake_json
+        # todo auth.ExceptionHTTPError, auth.ExceptionServerError
+        # todo refresh.ExceptionRefresh, refresh.ExceptionHTTPError, refresh.ExceptionServerError
 
-            response = self.auth.token("zek0ffw0w", "123456")
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(response.json(), fake_json)
+    # def test_token_1(self):
+    #     fake_login = "zek0ffw0w"
+    #     fake_password = "123456"
+    #     with self.assertRaises(ExceptionHTTPError) as context:
+    #         self.auth.token(fake_login, fake_password)
+    #     self.assertTrue("http post" in str(context.exception))
 
-    def test_refresh(self):
-        fake_json = {'user_id': "611a5c4ccd0a6b6c94c5a3da", 'owner_id': "1", 'access_token': "12", 'expires_at': "432", 'refresh_token': "432"}
-
-        with patch('platformcraft.auth.requests.post') as mock_post:
-            mock_post.return_value.status_code = 200
-            mock_post.return_value.json.return_value = fake_json
-
-            response = self.auth.refresh()
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(response.json(), fake_json)
+    # def test_refresh(self):
+    #     with self.assertRaises(ExceptionRefresh) as context:
+    #         self.auth.refresh()
+    #     self.assertTrue("user id or access" in str(context.exception))
 
 
 if __name__ == '__main__':
