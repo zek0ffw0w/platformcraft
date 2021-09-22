@@ -2,7 +2,6 @@ from ..auth import Auth
 from ..exceptions import *
 
 import unittest.mock
-from mock import patch
 
 login = "zek0ffw0w"
 password = "123456"
@@ -10,29 +9,45 @@ password = "123456"
 
 class TestAuth(unittest.TestCase):
     def setUp(self):
-        self.auth = Auth(login, password)
+        pass
 
-    def test_token(self):
-        fake_login = "zek0ffw0w"
-        fake_password = "12345"
+    # +
+    def test_token_auth(self):
         with self.assertRaises(ExceptionAuth) as context:
-            self.auth.token(fake_login, fake_password)
-        self.assertTrue("login or password" in str(context.exception))
+            fake_login = "zek0ffw0w"
+            fake_password = "1234"
+            self.auth = Auth(fake_login, fake_password)
+        self.assertTrue("login or password incorrect" in str(context.exception))
 
-        # todo auth.ExceptionHTTPError, auth.ExceptionServerError
-        # todo refresh.ExceptionRefresh, refresh.ExceptionHTTPError, refresh.ExceptionServerError
+    def test_token_http(self):
+        with self.assertRaises(ExceptionHTTPError) as context:
+            self.auth = Auth(login, password)
+        self.assertTrue("http post" in str(context.exception))
 
-    # def test_token_1(self):
-    #     fake_login = "zek0ffw0w"
-    #     fake_password = "123456"
-    #     with self.assertRaises(ExceptionHTTPError) as context:
-    #         self.auth.token(fake_login, fake_password)
-    #     self.assertTrue("http post" in str(context.exception))
+    def test_token_server(self):
+        with self.assertRaises(ExceptionServerError) as context:
+            self.auth = Auth(login, password)
+        self.assertTrue("unexpected response status" in str(context.exception))
 
-    # def test_refresh(self):
-    #     with self.assertRaises(ExceptionRefresh) as context:
-    #         self.auth.refresh()
-    #     self.assertTrue("user id or access" in str(context.exception))
+    # +
+    def test_refresh(self):
+        with self.assertRaises(ExceptionRefresh) as context:
+            self.auth = Auth(login, password)
+            self.auth.user_id = "test312"
+            self.auth.refresh()
+        self.assertTrue("user id or access token or refresh token incorrect" in str(context.exception))
+
+    def test_refresh_http(self):
+        with self.assertRaises(ExceptionHTTPError) as context:
+            self.auth = Auth(login, password)
+            self.auth.refresh()
+        self.assertTrue("http post" in str(context.exception))
+
+    def test_refresh_server(self):
+        with self.assertRaises(ExceptionServerError) as context:
+            self.auth = Auth(login, password)
+            self.auth.refresh()
+        self.assertTrue("unexpected response status" in str(context.exception))
 
 
 if __name__ == '__main__':

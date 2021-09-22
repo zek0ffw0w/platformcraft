@@ -54,8 +54,6 @@ class Auth:
                 self._get_data(resp)
             if resp.status_code == HTTPStatus.FORBIDDEN:
                 raise ExceptionRefresh("user id or access token or refresh token incorrect")
-            if resp.status_code == HTTPStatus.UNAUTHORIZED:
-                raise ExceptionAuth("Unauthorized")
 
         try:
             resp.raise_for_status()

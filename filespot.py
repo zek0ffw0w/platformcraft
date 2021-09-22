@@ -1,4 +1,4 @@
-from .logger import *
+from .logger import logger
 from .exceptions import *
 
 import json
