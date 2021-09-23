@@ -7,6 +7,8 @@ login = "zek0ffw0w"
 password = "123456"
 
 
+# python -m unittest C:/Users/malyc/Documents/platformcraft/tests/test_auth.py
+
 class TestAuth(unittest.TestCase):
     def setUp(self):
         pass

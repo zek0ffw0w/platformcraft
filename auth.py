@@ -36,7 +36,7 @@ class Auth:
             raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
 
     def refresh(self):
-        logger.debug("refreshing token")
+        logger.debug("Auth.refresh %s")
 
         url = self.AUTH_ADDR + '/refresh'
         headers = {'Authorization': 'Bearer ' + self.access_token + ': application/json'}
@@ -62,16 +62,18 @@ class Auth:
         self._get_data(resp)
 
     def _get_data(self, resp):
+
         try:
             data = resp.json()
         except Exception as e:
             raise ExceptionJson("cant get json from response {}".format(e)) from None
-        else:
 
+        else:
             try:
                 data_json = json.dumps(data)
             except Exception as e:
                 raise ExceptionJson("json.dump error {}".format(e)) from None
+
             else:
                 data = json.loads(data_json)
 
