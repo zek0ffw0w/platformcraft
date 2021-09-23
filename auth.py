@@ -5,17 +5,16 @@ from http import HTTPStatus
 import requests
 import json
 
-AUTH_ADDR = "https://auth.platformcraft.ru"
-
 
 class Auth:
     def __init__(self, login, password):
+        self.AUTH_ADDR = "https://auth.platformcraft.ru"
         self.token(login, password)
 
     def token(self, login, password):
         logger.debug("Auth.token %s", login)
 
-        url = AUTH_ADDR + '/token'
+        url = self.AUTH_ADDR + '/token'
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {'login': login, 'password': password}
 
@@ -39,7 +38,7 @@ class Auth:
     def refresh(self):
         logger.debug("refreshing token")
 
-        url = AUTH_ADDR + '/refresh'
+        url = self.AUTH_ADDR + '/refresh'
         headers = {'Authorization': 'Bearer ' + self.access_token + ': application/json'}
         body = {'user_id': self.user_id, 'refresh_token': self.refresh_token}
 

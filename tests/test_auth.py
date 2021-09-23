@@ -11,7 +11,6 @@ class TestAuth(unittest.TestCase):
     def setUp(self):
         pass
 
-    # +
     def test_token_auth(self):
         with self.assertRaises(ExceptionAuth) as context:
             fake_login = "zek0ffw0w"
@@ -22,14 +21,17 @@ class TestAuth(unittest.TestCase):
     def test_token_http(self):
         with self.assertRaises(ExceptionHTTPError) as context:
             self.auth = Auth(login, password)
+            self.auth.AUTH_ADDR = "https://auth.platformcraft.r"
+            self.auth.token(login, password)
         self.assertTrue("http post" in str(context.exception))
 
     def test_token_server(self):
         with self.assertRaises(ExceptionServerError) as context:
             self.auth = Auth(login, password)
+            self.auth.AUTH_ADDR = "https://auth.platformcraft.ru/test"
+            self.auth.token(login, password)
         self.assertTrue("unexpected response status" in str(context.exception))
 
-    # +
     def test_refresh(self):
         with self.assertRaises(ExceptionRefresh) as context:
             self.auth = Auth(login, password)
@@ -40,12 +42,14 @@ class TestAuth(unittest.TestCase):
     def test_refresh_http(self):
         with self.assertRaises(ExceptionHTTPError) as context:
             self.auth = Auth(login, password)
+            self.auth.AUTH_ADDR = "https://auth.platformcraft.r"
             self.auth.refresh()
         self.assertTrue("http post" in str(context.exception))
 
     def test_refresh_server(self):
         with self.assertRaises(ExceptionServerError) as context:
             self.auth = Auth(login, password)
+            self.auth.AUTH_ADDR = "https://auth.platformcraft.ru/test"
             self.auth.refresh()
         self.assertTrue("unexpected response status" in str(context.exception))
 
