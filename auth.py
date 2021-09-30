@@ -36,7 +36,7 @@ class Auth:
             raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
 
     def refresh(self):
-        logger.debug("Auth.refresh %s")
+        logger.debug("Auth.refresh")
 
         url = self.AUTH_ADDR + '/refresh'
         headers = {'Authorization': 'Bearer ' + self.access_token + ': application/json'}

@@ -5,6 +5,7 @@ from unittest.mock import patch, mock_open
 import json
 
 LOCAL_PATH = "C:/Users/malyc/Downloads/wiegand-produkte_en_1-710x368.mp4"
+LOCAL_PATH_FAKE = "C:/Users/malyc/Dloads/wiegand-pro.mp4"
 PC_PATH_INFO_TEST = "file_info_test"
 PC_PATH_TEST = "upltest1"
 name = {'description': "TESTTTTT"}
@@ -21,6 +22,14 @@ class TestFilespot(unittest.TestCase):
     #     with patch("builtins.open", mock_open(read_data="data")) as mock_file:
     #         assert open(LOCAL_PATH).read() == "data"
     #         mock_file.assert_called_with(LOCAL_PATH)
+
+    def test_upload_file(self):
+        with self.assertRaises(ExceptionOpenFile) as context:
+            self.filespot = self.session.filespot()
+            self.filespot.FILESPOT_ADDR = "https://filespot.platformcraft.ru/2/fs/containe/"
+            self.filespot.upload(LOCAL_PATH_FAKE, PC_PATH_TEST)
+        self.assertTrue("cant open file" in str(context.exception))
+
     def test_upload_link(self):
         with self.assertRaises(ExceptionUpload) as context:
             self.filespot = self.session.filespot()
@@ -34,7 +43,7 @@ class TestFilespot(unittest.TestCase):
             self.filespot = self.session.filespot()
             self.filespot.FILESPOT_ADDR = "https://filespot.platformcraft.ru/2/fs/containe/"
             self.filespot.remove(PC_PATH_TEST)
-        self.assertTrue("cant delete file" in str(context.exception))
+        self.assertTrue("cant remove file" in str(context.exception))
 
     def test_change(self):
         with self.assertRaises(ExceptionChange) as context:

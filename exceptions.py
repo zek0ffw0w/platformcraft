@@ -10,6 +10,10 @@ class ExceptionServerError(Exception):
     pass
 
 
+class ExceptionOpenFile(Exception):
+    pass
+
+
 class ExceptionJson(Exception):
     pass
 

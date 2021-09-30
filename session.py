@@ -27,6 +27,7 @@ class Session:
 
     def post(self, url, **params):
         params = self.set_auth_header(**params)
+
         try:
             resp = requests.post(url, **params)
         except HTTPError as http_err:

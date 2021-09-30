@@ -37,13 +37,6 @@ class TestSession(unittest.TestCase):
         result_put = self.session.put(url_put, data=json.dumps(self.name))
         self.assertEqual(result_put.status_code, 200)
 
-        #     mock_put.return_value.status_code = 200
-        #
-        # response = self.session.put(url_put)
-        #
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(response.json(), fake_json)
-
     def test_delete(self):
         pc_path = "test_7"
         url_delete = "https://filespot.platformcraft.ru/2/fs/container/" + self.session.owner_id + '/object/' + pc_path
