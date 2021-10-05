@@ -26,17 +26,17 @@ class Session:
         return self.auth.owner_id
 
     def post(self, url, **params):
-        params = self.set_auth_header(**params)
+        params = self._set_auth_header(**params)
 
         try:
             resp = requests.post(url, **params)
-        except HTTPError as http_err:
-            logger.debug(f'HTTP error occurred: {http_err}')
+        except Exception as e:
+            raise ExceptionHTTPError("http post: {}".format(e)) from None
 
         try:
             resp.raise_for_status()
         except Exception:
-            raise ExceptionUpload(self._get_msg_http_error_resp(resp))
+            raise ExceptionServerError("unexpected response status: ", self._get_msg_http_error_resp(resp))
 
     def get(self, url, **params):
         params = self._set_get_header(**params)
@@ -45,41 +45,41 @@ class Session:
             resp = requests.get(url, **params)
             if resp.ok:
                 logger.debug(resp.text)
-        except HTTPError as http_err:
-            logger.debug(f'HTTP error occurred: {http_err}')
+        except Exception as e:
+            raise ExceptionHTTPError("http get error: {}".format(e)) from None
 
         try:
             resp.raise_for_status()
         except Exception:
-            raise ExceptionInfo(self._get_msg_http_error_resp(resp))
+            raise ExceptionServerError("unexpected response status: ", self._get_msg_http_error_resp(resp))
 
     def put(self, url, **params):
         params = self._set_change_header(**params)
         try:
             resp = requests.put(url, **params)
             logger.debug(resp)
-        except HTTPError as http_err:
-            logger.debug(f'HTTP error occurred: {http_err}')
+        except Exception as e:
+            raise ExceptionHTTPError("http put error: {}".format(e)) from None
 
         try:
             resp.raise_for_status()
         except Exception:
-            raise ExceptionChange(self._get_msg_http_error_resp(resp))
+            raise ExceptionServerError("unexpected response status: ", self._get_msg_http_error_resp(resp))
 
     def delete(self, url, **params):
-        params = self.set_auth_header(**params)
+        params = self._set_auth_header(**params)
 
         try:
             resp = requests.delete(url, **params)
-        except HTTPError as http_err:
-            logger.debug(f'HTTP error occurred: {http_err}')
+        except Exception as e:
+            raise ExceptionHTTPError("http delete error: {}".format(e)) from None
 
         try:
             resp.raise_for_status()
         except Exception:
-            raise ExceptionRemove(self._get_msg_http_error_resp(resp))
+            raise ExceptionServerError("unexpected response status: ", self._get_msg_http_error_resp(resp))
 
-    def set_auth_header(self, **params):
+    def _set_auth_header(self, **params):
         params['headers'] = {'Authorization': 'Bearer ' + self.token}
         return params
 

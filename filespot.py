@@ -17,12 +17,12 @@ class Filespot:
         try:
             files = {'file': open(local_path, 'rb')}
         except Exception as e:
-            raise ExceptionOpenFile("cant open file: {}".format(e))
+            raise ExceptionOpenFile("cant open file: {}".format(e)) from None
 
         try:
             self.session.post(url, files=files)
         except Exception as e:
-            raise ExceptionUpload("cant upload file: {}".format(e))
+            raise ExceptionUpload("cant upload file: {}".format(e)) from None
 
     def remove(self, pc_path):
         logger.debug("filespot.remove: %s", pc_path)
@@ -32,7 +32,7 @@ class Filespot:
         try:
             self.session.delete(url)
         except Exception as e:
-            raise ExceptionRemove("cant remove file: {}".format(e))
+            raise ExceptionRemove("cant remove file: {}".format(e)) from None
 
     def change(self, pc_path, params):
         logger.debug("filespot.change: %s", pc_path)
@@ -44,7 +44,7 @@ class Filespot:
         try:
             self.session.put(url, data=body)
         except Exception as e:
-            raise ExceptionChange("cant change file: {}".format(e))
+            raise ExceptionChange("cant change file: {}".format(e)) from None
 
     def file_info(self, pc_path):
         logger.debug("filespot.file_info: %s", pc_path)
@@ -54,4 +54,4 @@ class Filespot:
         try:
             self.session.get(url)
         except Exception as e:
-            raise ExceptionInfo("cant get file info: {}".format(e))
+            raise ExceptionInfo("cant get file info: {}".format(e)) from None
