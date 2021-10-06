@@ -4,7 +4,7 @@ from .exceptions import *
 from .logger import *
 
 import requests
-from requests.exceptions import HTTPError
+
 
 
 class Session:
@@ -57,7 +57,6 @@ class Session:
         params = self._set_change_header(**params)
         try:
             resp = requests.put(url, **params)
-            logger.debug(resp)
         except Exception as e:
             raise ExceptionHTTPError("http put error: {}".format(e)) from None
 

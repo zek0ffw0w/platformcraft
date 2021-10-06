@@ -8,7 +8,7 @@ LOCAL_PATH = "C:/Users/malyc/Downloads/wiegand-produkte_en_1-710x368.mp4"
 LOCAL_PATH_FAKE = "C:/Users/malyc/Dloads/wiegand-pro.mp4"
 PC_PATH_INFO_TEST = "file_info_test"
 PC_PATH_TEST = "upltest1"
-name = {'description': "TESTTTTT"}
+
 
 LOGIN = "zek0ffw0w"
 PASSWORD = "123456"
@@ -23,21 +23,21 @@ class TestFilespot(unittest.TestCase):
     #         assert open(LOCAL_PATH).read() == "data"
     #         mock_file.assert_called_with(LOCAL_PATH)
 
-    def test_upload_file(self):
+    def test_upload_open_file(self):
         with self.assertRaises(ExceptionOpenFile) as context:
             self.filespot = self.session.filespot()
             self.filespot.FILESPOT_ADDR = "https://filespot.platformcraft.ru/2/fs/containe/"
             self.filespot.upload(LOCAL_PATH_FAKE, PC_PATH_TEST)
         self.assertTrue("cant open file" in str(context.exception))
 
-    def test_upload_link(self):
+    def test_upload_file(self):
         with self.assertRaises(ExceptionUpload) as context:
             self.filespot = self.session.filespot()
             self.filespot.FILESPOT_ADDR = "https://filespot.platformcraft.ru/2/fs/containe/"
             self.filespot.upload(LOCAL_PATH, PC_PATH_TEST)
         self.assertTrue("cant upload file" in str(context.exception))
 
-# todo check for file_remove, file_change not in storage?
+# todo check for file_remove not in storage?
     def test_remove(self):
         with self.assertRaises(ExceptionRemove) as context:
             self.filespot = self.session.filespot()
