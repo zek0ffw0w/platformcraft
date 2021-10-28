@@ -2,63 +2,51 @@ from ..session import *
 from ..auth import *
 
 import unittest
+from mock import patch
 
 login = "zek0ffw0w"
 password = "123456"
+url = "https://platformcraft.ru/"
 
 
 class TestSession(unittest.TestCase):
     def setUp(self):
         self.session = Session(login, password)
-        self.url = "https://filespot.platformcraft.ru"
+        self.name = {'name': "test1", 'description': "test description", 'private': False}
 
-    def test_post_serv(self):
-        with self.assertRaises(ExceptionServerError) as context:
-            self.url = "https://filespot.platformcraft.ru"
-            self.session.post(self.url)
-        self.assertTrue("unexpected response status" in str(context.exception))
+    def test_post(self):
+        with patch('platformcraft.session.requests.post') as mock_post:
+            mock_post.return_value.status_code = 200
 
-    def test_post_http(self):
-        with self.assertRaises(ExceptionHTTPError) as context:
-            self.url = "https://auth.platformcraft.r"
-            self.session.post(self.url)
-        self.assertTrue("http post:" in str(context.exception))
+        response = self.session.post(url)
+        self.assertEqual(response, 200)
 
-    def test_get_serv(self):
-        with self.assertRaises(ExceptionServerError) as context:
-            self.url = "https://filespot.platformcraft.ru"
-            self.session.get(self.url)
-        self.assertTrue("unexpected response status" in str(context.exception))
+    def test_get(self):
+        with patch('platformcraft.session.requests.get') as mock_get:
+            mock_get.return_value.status_code = 200
 
-    def test_get_http(self):
-        with self.assertRaises(ExceptionHTTPError) as context:
-            self.url = "https://auth.platformcraft.r"
-            self.session.get(self.url)
-        self.assertTrue("http get error:" in str(context.exception))
+        response = self.session.get(url)
+        self.assertEqual(response, 200)
 
-    def test_put_serv(self):
-        with self.assertRaises(ExceptionServerError) as context:
-            self.url = "https://filespot.platformcraft.ru"
-            self.session.put(self.url)
-        self.assertTrue("unexpected response status" in str(context.exception))
+    def test_put(self):
+        with patch('platformcraft.session.requests.put') as mock_put:
+            mock_put.return_value.status_code = 200
+            pc_path = "test1"
+            url_put = "https://filespot.platformcraft.ru/2/fs/container/" + self.session.owner_id + '/object/' + pc_path
 
-    def test_put_http(self):
-        with self.assertRaises(ExceptionHTTPError) as context:
-            self.url = "https://auth.platformcraft.r"
-            self.session.put(self.url)
-        self.assertTrue("http put error:" in str(context.exception))
+        result_put = self.session.put(url_put, data=json.dumps(self.name))
 
-    def test_delete_serv(self):
-        with self.assertRaises(ExceptionServerError) as context:
-            self.url = "https://filespot.platformcraft.ru"
-            self.session.delete(self.url)
-        self.assertTrue("unexpected response status" in str(context.exception))
+        self.assertEqual(result_put.status_code, 200)
 
-    def test_delete_http(self):
-        with self.assertRaises(ExceptionHTTPError) as context:
-            self.url = "https://auth.platformcraft.r"
-            self.session.delete(self.url)
-        self.assertTrue("http delete error:" in str(context.exception))
+    def test_delete(self):
+        with patch('platformcraft.session.requests.delete') as mock_delete:
+            mock_delete.return_value.status_code = 200
+        pc_path = "test_7"
+        url_delete = "https://filespot.platformcraft.ru/2/fs/container/" + self.session.owner_id + '/object/'
+
+        result_delete = self.session.delete(url_delete + pc_path)
+        self.assertEqual(result_delete.status_code, 200)
+        self.assertNotIn(pc_path, url_delete)
 
 
 if __name__ == '__main__':

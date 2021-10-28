@@ -27,8 +27,20 @@ class Auth:
         else:
             if resp.ok:
                 self._get_data(resp)
+                return resp
             if resp.status_code == HTTPStatus.FORBIDDEN:
                 raise ExceptionAuth("login or password incorrect")
+            if resp.status_code == HTTPStatus.BAD_REQUEST:
+                raise ExceptionBadRequest("Bad request")
+            if resp.status_code == HTTPStatus.NOT_FOUND:
+                raise ExceptionNotFound("Not found")
+            if resp.status_code == HTTPStatus.CONFLICT:
+                raise ExceptionConflict("Conflicting request")
+            if resp.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                raise ExceptionTooManyRequests("Too many requests")
+            if resp.status_code > 500:
+                raise ExceptionInternalServerError("Something went wrong, internal server error")
+
 
         try:
             resp.raise_for_status()
@@ -51,8 +63,19 @@ class Auth:
         else:
             if resp.ok:
                 self._get_data(resp)
+                return resp
             if resp.status_code == HTTPStatus.FORBIDDEN:
                 raise ExceptionRefresh("user id or access token or refresh token incorrect")
+            if resp.status_code == HTTPStatus.BAD_REQUEST:
+                raise ExceptionBadRequest("Bad request")
+            if resp.status_code == HTTPStatus.NOT_FOUND:
+                raise ExceptionNotFound("Not found")
+            if resp.status_code == HTTPStatus.CONFLICT:
+                raise ExceptionConflict("Conflicting request")
+            if resp.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                raise ExceptionTooManyRequests("Too many requests")
+            if resp.status_code > 500:
+                raise ExceptionInternalServerError("Something went wrong, internal server error")
 
         try:
             resp.raise_for_status()

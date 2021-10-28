@@ -36,3 +36,27 @@ class ExceptionRefresh(Exception):
 
 class ExceptionInfo(Exception):
     pass
+
+
+class ExceptionBadRequest(Exception):
+    pass
+
+
+class ExceptionForbidden(Exception):
+    pass
+
+
+class ExceptionNotFound(Exception):
+    pass
+
+
+class ExceptionConflict(Exception):
+    pass
+
+
+class ExceptionTooManyRequests(Exception):
+    pass
+
+
+class ExceptionInternalServerError(Exception):
+    pass
