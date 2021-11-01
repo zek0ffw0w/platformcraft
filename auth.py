@@ -41,7 +41,6 @@ class Auth:
             if resp.status_code > 500:
                 raise ExceptionInternalServerError("Something went wrong, internal server error")
 
-
         try:
             resp.raise_for_status()
         except Exception:
