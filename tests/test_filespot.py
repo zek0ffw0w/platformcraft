@@ -1,8 +1,7 @@
 from platformcraft import *
 
 import unittest.mock
-from unittest.mock import patch
-import json
+
 
 LOCAL_PATH = "platformcraft/tests/test_data/test.jpg"
 LOCAL_PATH_FAKE = "fake_path"
@@ -25,26 +24,28 @@ class TestFilespot(unittest.TestCase):
         params = {'name': PC_PATH_TEST2, 'description': "test description", 'private': False}
         response = self.filespot.change(PC_PATH_TEST1, params)
 
-        self.assertIn(PC_PATH_TEST2, FILESPOT_ADDR)
+        self.assertEqual(response.status_code, 200)
 
     def test_file_info(self):
         # check normal behaviour
         self.filespot = self.session.filespot()
-        self.filespot.file_info(PC_PATH_TEST2)
+        response = self.filespot.file_info(PC_PATH_TEST2)
+
+        self.assertEqual(response, 200)
 
     def test_remove(self):
         # check normal behaviour
         self.filespot = self.session.filespot()
         response = self.filespot.remove(PC_PATH_TEST2)
 
-        self.assertNotIn(PC_PATH_TEST2, FILESPOT_ADDR)
+        self.assertEqual(response.status_code, 200)
 
     def test_upload(self):
         # check normal behaviour
         self.filespot = self.session.filespot()
         response = self.filespot.upload(LOCAL_PATH, PC_PATH_TEST1)
 
-        self.assertIn(PC_PATH_TEST1, FILESPOT_ADDR)
+        self.assertEqual(response, 200)
 
     def test_exception_open_file(self):
         with self.assertRaises(ExceptionOpenFile) as context:

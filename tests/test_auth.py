@@ -1,7 +1,7 @@
 from platformcraft import *
 
 import unittest.mock
-from mock import patch
+from unittest.mock import patch
 
 login = "zek0ffw0w"
 password = "123456"

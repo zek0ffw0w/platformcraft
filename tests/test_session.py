@@ -1,8 +1,9 @@
-from ..session import *
-from ..auth import *
+from platformcraft import *
+
+import json
 
 import unittest
-from mock import patch
+from unittest.mock import patch
 
 login = "zek0ffw0w"
 password = "123456"

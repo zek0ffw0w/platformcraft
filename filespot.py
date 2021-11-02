@@ -21,14 +21,17 @@ class Filespot:
             raise ExceptionOpenFile("cant open file: {}".format(e)) from None
 
         with f:
-            self.session.post(url, files={'file': f})
+            response = self.session.post(url, files={'file': f})
+            return response
 
     def remove(self, pc_path):
         logger.debug("filespot.remove: %s", pc_path)
 
         url = FILESPOT_ADDR + self.session.owner_id + '/object/' + pc_path
 
-        self.session.delete(url)
+        response = self.session.delete(url)
+        if response.ok:
+            return response
 
     def change(self, pc_path, params):
         logger.debug("filespot.change: %s", pc_path)
@@ -37,11 +40,14 @@ class Filespot:
 
         body = json.dumps(params)
 
-        self.session.put(url, data=body)
+        response = self.session.put(url, data=body)
+        if response.ok:
+            return response
 
     def file_info(self, pc_path):
         logger.debug("filespot.file_info: %s", pc_path)
 
         url = FILESPOT_ADDR + self.session.owner_id + '/object/' + pc_path  # Укажите свой {owner_ID} и путь к файлу {path_file} после "/object/"
 
-        self.session.get(url)
+        response = self.session.get(url)
+        return response
