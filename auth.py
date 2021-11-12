@@ -1,12 +1,14 @@
 from .logger import logger
 from .exceptions import *
+from .model import AuthInfo
+from .http import HTTP
 
 from http import HTTPStatus
 import requests
 import json
 
 
-class Auth:
+class Auth(HTTP):
     def __init__(self, login, password):
         self.AUTH_ADDR = "https://auth.platformcraft.ru"
         self.token(login, password)
@@ -18,33 +20,16 @@ class Auth:
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {'login': login, 'password': password}
 
+
         try:
             resp = requests.post(url, headers=headers, data=body)
             logger.debug("Auth.token requests.post resp.StatusCode: {}".format(resp.status_code))
         except Exception as e:
             raise ExceptionHTTPError("http post: {}".format(e)) from None
 
-        else:
-            if resp.ok:
-                self._get_data(resp)
-                return resp
-            if resp.status_code == HTTPStatus.FORBIDDEN:
-                raise ExceptionAuth("login or password incorrect")
-            if resp.status_code == HTTPStatus.BAD_REQUEST:
-                raise ExceptionBadRequest("Bad request")
-            if resp.status_code == HTTPStatus.NOT_FOUND:
-                raise ExceptionNotFound("Not found")
-            if resp.status_code == HTTPStatus.CONFLICT:
-                raise ExceptionConflict("Conflicting request")
-            if resp.status_code == HTTPStatus.TOO_MANY_REQUESTS:
-                raise ExceptionTooManyRequests("Too many requests")
-            if resp.status_code > 500:
-                raise ExceptionInternalServerError("Something went wrong, internal server error")
-
-        try:
-            resp.raise_for_status()
-        except Exception:
-            raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
+        resp = self._handle_resp(resp)
+        data = self._get_data(resp)
+        return AuthInfo(data)
 
     def refresh(self):
         logger.debug("Auth.refresh")
@@ -95,7 +80,6 @@ class Auth:
                 data_json = json.dumps(data)
             except Exception as e:
                 raise ExceptionJson("json.dump error {}".format(e)) from None
-
             else:
                 data = json.loads(data_json)
 
@@ -103,6 +87,8 @@ class Auth:
         self.access_token = data["access_token"]
         self.user_id = data["user_id"]
         self.refresh_token = data["refresh_token"]
+
+        return data
 
     def _get_msg_http_error_resp(self, resp):
         try:
