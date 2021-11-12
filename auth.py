@@ -20,7 +20,6 @@ class Auth(HTTP):
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {'login': login, 'password': password}
 
-
         try:
             resp = requests.post(url, headers=headers, data=body)
             logger.debug("Auth.token requests.post resp.StatusCode: {}".format(resp.status_code))
@@ -44,29 +43,9 @@ class Auth(HTTP):
         except Exception as e:
             raise ExceptionHTTPError("http post: {}".format(e)) from None
 
-        else:
-            if resp.ok:
-                self._get_data(resp)
-                return resp
-            if resp.status_code == HTTPStatus.FORBIDDEN:
-                raise ExceptionRefresh("user id or access token or refresh token incorrect")
-            if resp.status_code == HTTPStatus.BAD_REQUEST:
-                raise ExceptionBadRequest("Bad request")
-            if resp.status_code == HTTPStatus.NOT_FOUND:
-                raise ExceptionNotFound("Not found")
-            if resp.status_code == HTTPStatus.CONFLICT:
-                raise ExceptionConflict("Conflicting request")
-            if resp.status_code == HTTPStatus.TOO_MANY_REQUESTS:
-                raise ExceptionTooManyRequests("Too many requests")
-            if resp.status_code > 500:
-                raise ExceptionInternalServerError("Something went wrong, internal server error")
-
-        try:
-            resp.raise_for_status()
-        except Exception:
-            raise ExceptionServerError("unexpected response status: {}".format(resp.status_code)) from None
-
-        self._get_data(resp)
+        resp = self._handle_resp(resp)
+        data = self._get_data(resp)
+        return AuthInfo(data)
 
     def _get_data(self, resp):
 
