@@ -3,8 +3,6 @@ from .filespot import Filespot
 from .http import HTTP
 
 
-
-
 class Session(HTTP):
     def __init__(self, login, password):
         self.auth = Auth(login, password)
@@ -22,4 +20,3 @@ class Session(HTTP):
     @property
     def owner_id(self):
         return self.auth.owner_id
-
