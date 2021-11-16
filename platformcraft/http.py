@@ -1,4 +1,4 @@
-from http import HTTPStatus
+from http import *
 import requests
 
 from .exceptions import *
@@ -58,7 +58,7 @@ class HTTP:
             raise ExceptionConflict("Conflicting request")
         elif resp.status_code == HTTPStatus.TOO_MANY_REQUESTS:
             raise ExceptionTooManyRequests("Too many requests")
-        elif resp.status_code == HTTPStatus.ExceptionInternalServerError:
+        elif resp.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
             raise ExceptionInternalServerError("Something went wrong, internal server error")
         else:
             raise ExceptionHTTPError("Unhandled http error. Code: {}".format(resp.status_code)) from None
