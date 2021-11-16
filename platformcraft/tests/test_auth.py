@@ -67,6 +67,24 @@ class TestAuth(unittest.TestCase):
             with self.assertRaises(ExceptionTooManyRequests) as context:
                 auth_info = self.auth.token("zek0ffw0w", "123456")
 
+    def test_token_internal_server_error(self):
+        with patch('platformcraft.auth.requests.post') as mock_post:
+            mock_post.return_value.status_code = 500
+            mock_post.return_value.ok = False
+            mock_post.return_value.json.return_value = fake_auth_json
+
+            with self.assertRaises(ExceptionInternalServerError) as context:
+                auth_info = self.auth.token("zek0ffw0w", "123456")
+
+    def test_token_http_error(self):
+        with patch('platformcraft.auth.requests.post') as mock_post:
+            mock_post.return_value.status_code = 502
+            mock_post.return_value.ok = False
+            mock_post.return_value.json.return_value = fake_auth_json
+
+            with self.assertRaises(ExceptionHTTPError) as context:
+                auth_info = self.auth.token("zek0ffw0w", "123456")
+
     def test_refresh_ok(self):
         with patch('platformcraft.auth.requests.post') as mock_post:
             mock_post.return_value.status_code = 200
@@ -118,6 +136,24 @@ class TestAuth(unittest.TestCase):
             mock_post.return_value.json.return_value = fake_auth_json
 
             with self.assertRaises(ExceptionTooManyRequests) as context:
+                auth_info = self.auth.refresh()
+
+    def test_refresh_internal_server_error(self):
+        with patch('platformcraft.auth.requests.post') as mock_post:
+            mock_post.return_value.status_code = 500
+            mock_post.return_value.ok = False
+            mock_post.return_value.json.return_value = fake_auth_json
+
+            with self.assertRaises(ExceptionInternalServerError) as context:
+                auth_info = self.auth.refresh()
+
+    def test_refresh_http_error(self):
+        with patch('platformcraft.auth.requests.post') as mock_post:
+            mock_post.return_value.status_code = 502
+            mock_post.return_value.ok = False
+            mock_post.return_value.json.return_value = fake_auth_json
+
+            with self.assertRaises(ExceptionHTTPError) as context:
                 auth_info = self.auth.refresh()
 
 
