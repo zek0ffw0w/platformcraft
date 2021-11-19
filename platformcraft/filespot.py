@@ -47,7 +47,7 @@ class Filespot:
     def file_info(self, pc_path):
         logger.debug("filespot.file_info: %s", pc_path)
 
-        url = FILESPOT_ADDR + self.session.owner_id + '/object/' + pc_path  # Укажите свой {owner_ID} и путь к файлу {path_file} после "/object/"
+        url = FILESPOT_ADDR + self.session.owner_id + '/object/' + pc_path
 
         response = self.session.get(url)
         return response
