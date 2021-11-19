@@ -10,9 +10,7 @@ fake_auth_json = {'user_id': "uid", 'owner_id': "oid", 'access_token': "acces_to
 
 
 class TestAuth(unittest.TestCase):
-
-    def setUp(self):
-        self.auth = Auth("zek0ffw0w", "123456")
+    auth = Auth("zek0ffw0w", "123456")
 
     def test_token_ok(self):
         with patch('platformcraft.auth.requests.post') as mock_post:
@@ -84,6 +82,8 @@ class TestAuth(unittest.TestCase):
 
             with self.assertRaises(ExceptionHTTPError) as context:
                 auth_info = self.auth.token("zek0ffw0w", "123456")
+
+    # testing method refresh
 
     def test_refresh_ok(self):
         with patch('platformcraft.auth.requests.post') as mock_post:

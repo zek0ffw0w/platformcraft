@@ -14,8 +14,8 @@ PASSWORD = "123456"
 
 
 class TestFilespot(unittest.TestCase):
-    def setUp(self):
-        self.session = Session(LOGIN, PASSWORD)
+
+    session = Session(LOGIN, PASSWORD)
 
     def test_change(self):
         # check normal behaviour
@@ -31,7 +31,7 @@ class TestFilespot(unittest.TestCase):
         self.filespot = self.session.filespot()
         response = self.filespot.file_info(PC_PATH_TEST2)
 
-        self.assertEqual(response, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_remove(self):
         # check normal behaviour
@@ -45,7 +45,7 @@ class TestFilespot(unittest.TestCase):
         self.filespot = self.session.filespot()
         response = self.filespot.upload(LOCAL_PATH, PC_PATH_TEST1)
 
-        self.assertEqual(response, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_exception_open_file(self):
         with self.assertRaises(ExceptionOpenFile) as context:
@@ -53,7 +53,7 @@ class TestFilespot(unittest.TestCase):
             self.filespot.upload(LOCAL_PATH_FAKE, PC_PATH_TEST1)
 
     def test_exception_server(self):
-        with self.assertRaises(ExceptionServerError) as context:
+        with self.assertRaises(ExceptionNotFound) as context:
             self.filespot = self.session.filespot()
             params = {'name': "file_info_test", 'description': "test description", 'private': False}
             self.filespot.change(PC_PATH_TEST1, params)
