@@ -3,7 +3,6 @@ from .exceptions import *
 from .model import AuthInfo
 from .http import HTTP
 
-from http import HTTPStatus
 import requests
 import json
 
