@@ -77,3 +77,4 @@ class HTTP:
             return data["msg"]
         except:
             return resp.content
+
