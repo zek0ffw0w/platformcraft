@@ -6,9 +6,8 @@ LOGIN = "zek0ffw0w"
 PASSWORD = "123456"
 
 LOCAL_PATH = "C:/Users/malyc/Downloads/wiegand-produkte_en_1-710x368.mp4"
-PC_PATH = "vidik"
+PC_PATH = "/vidik"
 info_test = "file_info_test"
-test_t = "upltest1"
 params = {'name': "file_info_test", 'description': "test description", 'private': False}
 
 
@@ -28,12 +27,6 @@ def main():
         return
 
     try:
-        object = filespot.remove(PC_PATH)
-    except Exception as e:
-        logging.error("unsuccessful remove: %s", e)
-        return
-
-    try:
         object = filespot.file_info(info_test)
     except Exception as e:
         logging.error("unsuccessful getting info: %s", e)
@@ -43,6 +36,12 @@ def main():
         object = filespot.change(info_test, params)
     except Exception as e:
         logging.error("unsuccessful changing: %s", e)
+        return
+
+    try:
+        object = filespot.remove(PC_PATH)
+    except Exception as e:
+        logging.error("unsuccessful remove: %s", e)
         return
 
     try:
