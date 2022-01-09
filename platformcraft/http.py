@@ -16,7 +16,7 @@ class HTTP:
         return self._handle_resp(resp)
 
     def get(self, url, **params):
-        params = self._set_get_header(**params)
+        params = self._set_auth_header(**params)
 
         try:
             resp = requests.get(url, **params)
@@ -77,7 +77,3 @@ class HTTP:
             return data["msg"]
         except:
             return resp.content
-
-    def _set_get_header(self, **params):
-        params['headers'] = {'Authorization': 'Bearer ' + self.token}
-        return params
