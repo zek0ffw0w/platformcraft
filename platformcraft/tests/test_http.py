@@ -11,7 +11,7 @@ fake_auth_json = {'user_id': "uid", 'owner_id': "oid", 'access_token': "acces_to
 fake_file_info_json = {'id': "432drs", "status": "stat", "name": "name"}
 
 
-class TestAuth(unittest.TestCase):
+class TestHttp(unittest.TestCase):
     auth = Auth("zek0ffw0w", "123456")
     session = Session("zek0ffw0w", "123456")
     filespot = session.filespot()
