@@ -6,7 +6,7 @@ from .exceptions import *
 
 class HTTP:
     def post(self, url, **params):
-        params = self._set_auth_header(**params)
+        params = self._set_header(**params)
 
         try:
             resp = requests.post(url, **params)
@@ -16,7 +16,7 @@ class HTTP:
         return self._handle_resp(resp)
 
     def get(self, url, **params):
-        params = self._set_auth_header(**params)
+        params = self._set_header(**params)
 
         try:
             resp = requests.get(url, **params)
@@ -26,7 +26,7 @@ class HTTP:
         return self._handle_resp(resp)
 
     def put(self, url, **params):
-        params = self._set_change_header(**params)
+        params = self._set_header(**params)
 
         try:
             resp = requests.put(url, **params)
@@ -36,7 +36,7 @@ class HTTP:
         return self._handle_resp(resp)
 
     def delete(self, url, **params):
-        params = self._set_auth_header(**params)
+        params = self._set_header(**params)
 
         try:
             resp = requests.delete(url, **params)
@@ -63,12 +63,8 @@ class HTTP:
         else:
             raise ExceptionHTTPError("Unhandled http error. Code: {}".format(resp.status_code)) from None
 
-    def _set_auth_header(self, **params):
+    def _set_header(self, **params):
         params['headers'] = {'Authorization': 'Bearer ' + self.token}
-        return params
-
-    def _set_change_header(self, **params):
-        params['headers'] = {'Authorization': 'Bearer ' + self.token, 'Content-Type': 'application/json'}
         return params
 
     def _get_msg_http_error_resp(self, resp):

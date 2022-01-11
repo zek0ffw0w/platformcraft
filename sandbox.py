@@ -21,7 +21,7 @@ def main():
     filespot = session.filespot()
 
     try:
-        object = filespot.upload(LOCAL_PATH, PC_PATH)
+        object = filespot.upload(LOCAL_PATH, PC_PATH, is_dir=False)
     except Exception as e:
         logging.error("unsuccessful upload: %s", e)
         return
