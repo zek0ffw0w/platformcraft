@@ -17,14 +17,16 @@ PASSWORD = "123456"
 class TestFilespot(unittest.TestCase):
     session = Session(LOGIN, PASSWORD)
 
-    # def test_change_not_found(self):
-    #     with patch('platformcraft.filespot') as mock_change:
-    #         mock_change.return_value.status_code = 429
-    #         mock_change.return_value.ok = False
-    #
-    #     with self.assertRaises(ExceptionNotFound) as context:
-    #         self.filespot = self.session.filespot()
-    #         auth_info = self.filespot.change(PC_PATH_TEST3, params)
+    @patch('platformcraft.filespot')
+    def test_change(self, MockChange):
+        filespot = MockChange()
+        filespot.change.return_value.status_code = 404
+        filespot.change.return_value.ok = False
+
+        with self.assertRaises(ExceptionNotFound) as context:
+            resp = filespot.change(PC_PATH_TEST3, description="43244")
+            print(resp.status_code)
+
 
     # def test_file_info(self):
     #     # check normal behaviour
@@ -35,15 +37,14 @@ class TestFilespot(unittest.TestCase):
     #         with self.assertRaises(ExceptionNotFound) as context:
     #             self.filespot = self.session.filespot()
     #             auth_info = self.filespot.file_info(PC_PATH_TEST2)
-
-
+    #
     # def test_remove(self):
     #     # check normal behaviour
     #     self.filespot = self.session.filespot()
     #     response = self.filespot.remove(PC_PATH_TEST2)
     #
     #     self.assertEqual(response.status_code, 200)
-    #
+
     # def test_upload(self):
     #     # check normal behaviour
     #     self.filespot = self.session.filespot()
@@ -54,8 +55,8 @@ class TestFilespot(unittest.TestCase):
     # def test_exception_open_file(self):
     #     with self.assertRaises(ExceptionOpenFile) as context:
     #         self.filespot = self.session.filespot()
-    #         self.filespot.upload(LOCAL_PATH_FAKE, PC_PATH_TEST1)
-
+    #         self.filespot.upload(LOCAL_PATH_FAKE, PC_PATH_TEST1, is_dir=False)
+    #
     # def test_exception_server(self):
     #     with self.assertRaises(ExceptionNotFound) as context:
     #         self.filespot = self.session.filespot()
