@@ -39,9 +39,9 @@ class UploadInfo:
         #                    "format_name":"mov,mp4,m4a,3gp,3g2,mj2",
         #                    "format_long_name":"QuickTime / MOV",
         #                    "duration":126.08,"bit_rate":1495934}},
-        self.preview_url = data["preview_url"]
-        self.previews = data["previews"]
-        self.download_url = ["download_url"]
-        self.hls = data["hls"]
-        self.perms = data["perms"]
-        self.etag = data["etag"]
+        # self.preview_url = data["preview_url"]
+        # self.previews = data["previews"]
+        # self.download_url = ["download_url"]
+        # self.hls = data["hls"]
+        # self.perms = data["perms"]
+        # self.etag = data["etag"]
