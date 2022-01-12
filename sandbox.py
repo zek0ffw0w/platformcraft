@@ -7,8 +7,8 @@ PASSWORD = "123456"
 
 LOCAL_PATH = "C:/Users/malyc/Downloads/wiegand-produkte_en_1-710x368.mp4"
 PC_PATH = "/vidik"
-info_test = "file_info_test"
-params = {'name': "file_info_test", 'description': "test description", 'private': False}
+info_test = "test"
+# params = {'name': "file_info_test", 'description': "test description", 'private': False}
 
 
 def main():
@@ -31,24 +31,24 @@ def main():
     except Exception as e:
         logging.error("unsuccessful getting info: %s", e)
         return
-
-    try:
-        object = filespot.change(info_test, params)
-    except Exception as e:
-        logging.error("unsuccessful changing: %s", e)
-        return
-
-    try:
-        object = filespot.remove(PC_PATH)
-    except Exception as e:
-        logging.error("unsuccessful remove: %s", e)
-        return
-
-    try:
-        session = session.refresh()
-    except Exception as e:
-        logging.error("unsuccessful refresh: %s", e)
-        return
+    #
+    # try:
+    #     object = filespot.change(info_test, name=info_test, description="33", private=False)
+    # except Exception as e:
+    #     logging.error("unsuccessful changing: %s", e)
+    #     return
+    #
+    # try:
+    #     object = filespot.remove(PC_PATH)
+    # except Exception as e:
+    #     logging.error("unsuccessful remove: %s", e)
+    #     return
+    #
+    # try:
+    #     session = session.refresh()
+    # except Exception as e:
+    #     logging.error("unsuccessful refresh: %s", e)
+    #     return
 
 
 if __name__ == '__main__':
